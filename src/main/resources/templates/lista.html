@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Produse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --bg: #f9fafb;
+            --card-bg: #ffffff;
+            --text: #111827;
+            --border: #e5e7eb;
+        }
+
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); padding: 2rem; }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        h1 { margin-bottom: 2rem; }
+
+        .upload-section, .controls-section {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card-bg); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th { background: #f3f4f6; padding: 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); }
+        tr:last-child td { border-bottom: none; }
+
+        input[type="text"] { padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px; }
+        .btn { padding: 0.6rem 1rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-green { background: #22c55e; color: white; }
+        .btn-blue { background: var(--primary); color: white; }
+        .btn-gray { background: #6b7280; color: white; }
+        .btn-edit { color: var(--primary); font-weight: 600; text-decoration: none; margin-right: 1rem; }
+        .btn-delete { color: #ef4444; font-weight: 600; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<form th:action="@{/logout}" method="post" style="display: inline; float: right;">
+    <button type="submit" style="padding: 8px 12px; background-color: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+        Deconectare
+    </button>
+</form>
+
+<div class="container">
+    <h1>Produse Disponibile</h1>
+
+    <div class="upload-section">
+        <h3>Încarcă factură PDF</h3>
+        <form method="POST" th:action="@{/upload-invoice}" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".pdf" required />
+            <button type="submit" class="btn btn-blue">Procesează Factura</button>
+        </form>
+    </div>
+
+    <div class="controls-section" style="display: flex; gap: 1rem; align-items: center;">
+        <form th:action="@{/}" method="get" style="display: flex; gap: 0.5rem;">
+            <input type="text" name="search" th:value="${searchKeyword}" placeholder="Caută produs...">
+            <button type="submit" class="btn btn-green">Caută</button>
+        </form>
+
+        <div style="flex-grow: 1;"></div> <a th:href="@{/(sort='nume_asc')}" class="btn btn-blue">Sortează (A-Z)</a>
+        <a th:href="@{/}" class="btn btn-gray">Resetează</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nume</th>
+            <th>Preț (EUR)</th>
+            <th>Preț (RON)</th>
+            <th>Curs (EUR/RON)</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(produse)}">
+            <td colspan="6" style="text-align: center; color: #6b7280;">Nu s-au găsit produse.</td>
+        </tr>
+        <tr th:each="p : ${produse}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.nume}" style="font-weight: 600;"></td>
+            <td th:text="${p.pretEur} + ' €'"></td>
+            <td th:text="${p.pretRon} + ' RON'"></td>
+            <td th:text="${p.cursValutar}"></td>
+            <td>
+                <a th:href="@{'/edit/' + ${p.id}}" class="btn-edit">Editare</a>
+                <a th:href="@{'/delete/' + ${p.id}}" class="btn-delete" onclick="return confirm('Sigur ștergi?')">Ștergere</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
