@@ -1,4 +1,4 @@
-# Sistem Integrat de Gestiune, Scraping și Procesare Documente
+# Sistem Integrat de Gestiune, Scraping și Procesare Documente pentru firma Autobrand
 
 Acest proiect reprezintă o aplicație web completă dezvoltată în Spring Boot, concepută pentru a automatiza colectarea de date despre produse prin scraping web, integrarea cursurilor valutare în timp real, procesarea facturilor în format PDF și gestionarea acestor entități printr-o interfață securizată.
 
